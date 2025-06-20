@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>朗读学习指导平台</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 2L26 8V24L16 30L6 24V8L16 2Z" fill="url(#logoGradient)"/>
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6366F1"/>
+                                <stop offset="100%" style="stop-color:#8B5CF6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="brand-text">朗读学习平台</span>
+                </div>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="pages/materials.html" class="nav-link">资料库</a>
+                <a href="pages/chat.html" class="nav-link">智能助手</a>
+                <a href="pages/analysis.html" class="nav-link">朗读分析</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 英雄区域 -->
+        <section id="home" class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        让朗读学习
+                        <span class="gradient-text">更智能</span>
+                    </h1>
+                    <p class="hero-description">
+                        专为12-18岁学生设计的朗读学习指导平台，提供智能分析、个性化建议和丰富的学习资源，让你在家也能获得专业的朗读指导。
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="pages/materials.html" class="btn btn-primary">
+                            开始学习
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M4 10H16M16 10L12 6M16 10L12 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="hero-card">
+                        <div class="card-header">
+                            <div class="card-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <span class="card-title">朗读分析</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="analysis-item">
+                                <span class="label">语音清晰度</span>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 85%"></div>
+                                </div>
+                                <span class="score">85%</span>
+                            </div>
+                            <div class="analysis-item">
+                                <span class="label">语调变化</span>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 78%"></div>
+                                </div>
+                                <span class="score">78%</span>
+                            </div>
+                            <div class="analysis-item">
+                                <span class="label">节奏掌控</span>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 92%"></div>
+                                </div>
+                                <span class="score">92%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能特色 -->
+        <section class="features-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">核心功能</h2>
+                    <p class="section-description">三大核心功能，全方位提升你的朗读技能</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card" data-feature="materials">
+                        <div class="feature-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <path d="M8 12H40V36H8V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 8V16M24 8V16M32 8V16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M14 20H34M14 24H30M14 28H26" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">丰富资料库</h3>
+                        <p class="feature-description">精选朗读材料，分类清晰，包含古诗词、现代诗歌、散文等多种体裁，满足不同学习需求。</p>
+                        <button class="feature-btn" onclick="navigateToPage('materials')">
+                            <a href="pages/materials.html" class="nav-link">探索资料</a>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="feature-card" data-feature="chat">
+                        <div class="feature-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <path d="M24 4C35.046 4 44 12.954 44 24C44 35.046 35.046 44 24 44C20.5 44 17.2 43.1 14.3 41.5L4 44L6.5 33.7C4.9 30.8 4 27.5 4 24C4 12.954 12.954 4 24 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M16 20H32M16 24H28M16 28H24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">李白智能助手</h3>
+                        <p class="feature-description">与李白智能体对话，获得个性化的朗读指导和文学知识，让学习更有趣味性。</p>
+                        <button class="feature-btn" onclick="navigateToPage('chat')">
+                            <a href="pages/chat.html" class="nav-link">开始对话</a>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="feature-card" data-feature="analysis">
+                        <div class="feature-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <path d="M8 40V24M16 40V16M24 40V28M32 40V20M40 40V12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="8" cy="24" r="2" fill="currentColor"/>
+                                <circle cx="16" cy="16" r="2" fill="currentColor"/>
+                                <circle cx="24" cy="28" r="2" fill="currentColor"/>
+                                <circle cx="32" cy="20" r="2" fill="currentColor"/>
+                                <circle cx="40" cy="12" r="2" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <h3 class="feature-title">智能分析评分</h3>
+                        <p class="feature-description">上传朗读视频，AI智能分析语音特征，提供详细评分和改进建议，精准提升朗读水平。</p>
+                        <button class="feature-btn" onclick="navigateToPage('analysis')">
+                            <a href="pages/analysis.html" class="nav-link">立即分析</a>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 使用流程 -->
+        <section class="process-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title">使用流程</h2>
+                    <p class="section-description">简单三步，开启你的朗读学习之旅</p>
+                </div>
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">选择学习材料</h3>
+                            <p class="step-description">从资料库中选择适合的朗读材料，或与李白智能助手交流获取推荐。</p>
+                        </div>
+                    </div>
+                    <div class="step-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">练习朗读</h3>
+                            <p class="step-description">根据材料进行朗读练习，录制朗读视频准备上传分析。</p>
+                        </div>
+                    </div>
+                    <div class="step-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">获得反馈</h3>
+                            <p class="step-description">上传朗读视频，获得AI智能分析评分和个性化改进建议。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+                            <path d="M16 2L26 8V24L16 30L6 24V8L16 2Z" fill="url(#footerLogoGradient)"/>
+                            <defs>
+                                <linearGradient id="footerLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#6366F1"/>
+                                    <stop offset="100%" style="stop-color:#8B5CF6"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <p class="footer-description">专业的朗读学习指导平台，让每个学生都能享受高质量的朗读教育。</p>
+                </div>
+               
+                    
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+</body>
+</html>
+

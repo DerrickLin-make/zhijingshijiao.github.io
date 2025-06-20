@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资料库 - 朗读学习指导平台</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .materials-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+            margin-top: 70px;
+        }
+        
+        .materials-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .materials-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+        
+        .search-section {
+            padding: var(--spacing-2xl) 0;
+            background: var(--gray-50);
+        }
+        
+        .search-container {
+            display: flex;
+            gap: var(--spacing-lg);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) 50px;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            transition: var(--transition-fast);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: var(--spacing-lg);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: 2px solid var(--gray-200);
+            background: var(--white);
+            color: var(--gray-600);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition-fast);
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .materials-content {
+            padding: var(--spacing-2xl) 0;
+        }
+        
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .material-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--transition-normal);
+            cursor: pointer;
+        }
+        
+        .material-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .material-image {
+            width: 100%;
+            height: 200px;
+            background: var(--gradient-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            font-size: 3rem;
+        }
+        
+        .material-body {
+            padding: var(--spacing-lg);
+        }
+        
+        .material-category {
+            display: inline-block;
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-blue);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .material-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.4;
+        }
+        
+        .material-author {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .material-excerpt {
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-lg);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .material-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .material-difficulty {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+        
+        .difficulty-stars {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .star {
+            width: 12px;
+            height: 12px;
+            background: var(--gray-300);
+            border-radius: 2px;
+        }
+        
+        .star.filled {
+            background: var(--warning-yellow);
+        }
+        
+        .material-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .action-btn {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: var(--transition-fast);
+        }
+        
+        .btn-view {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .btn-view:hover {
+            background: var(--primary-blue-dark);
+        }
+        
+        .btn-favorite {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+        
+        .btn-favorite:hover,
+        .btn-favorite.active {
+            background: var(--error-red);
+            color: var(--white);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        .page-btn {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            color: var(--gray-600);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .page-btn:hover,
+        .page-btn.active {
+            border-color: var(--primary-blue);
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: var(--spacing-3xl);
+            color: var(--gray-500);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-3xl);
+            color: var(--gray-500);
+        }
+        
+        .empty-icon {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 2L26 8V24L16 30L6 24V8L16 2Z" fill="url(#logoGradient)"/>
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6366F1"/>
+                                <stop offset="100%" style="stop-color:#8B5CF6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="brand-text">朗读学习平台</span>
+                </div>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="materials.html" class="nav-link active">资料库</a>
+                <a href="chat.html" class="nav-link">智能助手</a>
+                <a href="analysis.html" class="nav-link">朗读分析</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="materials-header">
+        <div class="container">
+            <h1 class="materials-title">学习资料库</h1>
+            <p class="materials-subtitle">精选朗读材料，分类清晰，助你提升朗读技能</p>
+        </div>
+    </header>
+    <div class="button-center-container">
+        <a href="https://www.gushiwen.cn/" target="_blank" style="
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ffffff;
+            background-color: #8B5CF6; 
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none; /* 移除下划线 */
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        ">
+            古诗文网-古诗文经典传承
+        </a>
+    </div>
+    </body>
+    </html>
+    <style>
+        /* ... 您现有的 CSS 样式 ... */
+    
+        .button-center-container {
+            display: flex; /* 使用 Flexbox */
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 (如果容器有高度) */
+            width: 100%; /* 让容器占据整个宽度 */
+            padding: 20px 0; /* 给按钮上下留一些空间 */
+            margin-top: 40px; /* 根据需要调整与上方内容的距离 */
+            margin-bottom: 40px; /* 根据需要调整与下方内容的距离 */
+        }
+    
+        /* 可选：为按钮添加hover效果 */
+        .gushiwen-button:hover {
+            background-color: #6a3ab2; /* 更深的紫色 */
+            transform: translateY(-2px); /* 向上轻微浮动 */
+        }
+    </style>
+    <!-- 搜索和筛选
+    <section class="search-section">
+        <div class="container">
+            <div class="search-container">
+                <div class="search-box">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M19 19L13 13L19 19ZM15 8C15 11.866 11.866 15 8 15C4.134 15 1 11.866 1 8C1 4.134 4.134 1 8 1C11.866 1 15 4.134 15 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <input type="text" class="search-input" placeholder="搜索朗读材料..." id="searchInput">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-category="all">全部</button>
+                    <button class="filter-btn" data-category="poetry">古诗词</button>
+                    <button class="filter-btn" data-category="modern">现代诗</button>
+                    <button class="filter-btn" data-category="prose">散文</button>
+                    <button class="filter-btn" data-category="classic">经典文学</button>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+    <!-- 材料内容 -->
+    <main class="materials-content">
+        <div class="container">
+            <div id="materialsGrid" class="materials-grid">
+                <!-- 材料卡片将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 分页 -->
+            <div class="pagination" id="pagination">
+                <!-- 分页按钮将通过JavaScript动态生成 -->
+            </div>
+            
+            <!-- 加载状态 -->
+            <div class="loading-state" id="loadingState" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>正在加载资料...</p>
+            </div>
+            
+            <!-- 空状态 -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">📚</div>
+                <h3>暂无相关资料</h3>
+                <p>请尝试其他搜索条件或分类</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 材料详情模态框 -->
+    <div class="modal" id="materialModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">材料详情</h3>
+                <button class="modal-close" onclick="closeMaterialModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 详情内容将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="../js/api.js"></script>
+    <script src="../js/main.js"></script> -->
+    <!-- <script>
+        let currentCategory = 'all';
+        let currentSearch = '';
+        let sessionId = utils.getSessionId();
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMaterials();
+            initSearchAndFilter();
+        });
+
+        // 加载材料数据
+        async function loadMaterials() {
+            try {
+                const params = {
+                    category: currentCategory === 'all' ? '' : currentCategory,
+                    search: currentSearch,
+                    page: 1,
+                    per_page: 12
+                };
+
+                const response = await materialsAPI.getMaterials(params);
+                
+                if (response.success) {
+                    displayMaterials(response.data.materials);
+                } else {
+                    utils.showNotification('加载材料失败', 'error');
+                }
+            } catch (error) {
+                console.error('加载材料失败:', error);
+                utils.showNotification('加载材料失败', 'error');
+            }
+        }
+
+        // 显示材料列表
+        function displayMaterials(materials) {
+            const materialsGrid = document.getElementById('materialsGrid');
+            
+            if (!materials || materials.length === 0) {
+                materialsGrid.innerHTML = `
+                    <div class="no-materials">
+                        <p>暂无符合条件的材料</p>
+                    </div>
+                `;
+                return;
+            }
+
+            materialsGrid.innerHTML = materials.map(material => `
+                <div class="material-card" data-category="${material.category}">
+                    <div class="material-icon">
+                        ${getCategoryIcon(material.category)}
+                    </div>
+                    <div class="material-category">${getCategoryName(material.category)}</div>
+                    <h3 class="material-title">${material.title}</h3>
+                    <div class="material-author">作者：${material.author}</div>
+                    <div class="material-excerpt">${material.excerpt}</div>
+                    <div class="material-meta">
+                        <div class="difficulty">
+                            难度：${'★'.repeat(material.difficulty)}${'☆'.repeat(5 - material.difficulty)}
+                        </div>
+                    </div>
+                    <div class="material-actions">
+                        <button class="btn-view" onclick="viewMaterial(${material.id})">查看</button>
+                        <button class="btn-favorite" onclick="toggleFavorite(${material.id}, this)">
+                            🤍
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 获取分类图标
+        function getCategoryIcon(category) {
+            const icons = {
+                'poetry': '📜',
+                'modern': '🎭',
+                'prose': '📖',
+                'classic': '📚'
+            };
+            return icons[category] || '📄';
+        }
+
+        // 获取分类名称
+        function getCategoryName(category) {
+            const names = {
+                'poetry': '古诗词',
+                'modern': '现代诗',
+                'prose': '散文',
+                'classic': '经典文学'
+            };
+            return names[category] || '其他';
+        }
+
+        // 初始化搜索和筛选
+        function initSearchAndFilter() {
+            const searchInput = document.getElementById('searchInput');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+
+            // 搜索功能
+            searchInput.addEventListener('input', function() {
+                currentSearch = this.value.trim();
+                debounce(loadMaterials, 500)();
+            });
+
+            // 分类筛选
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 更新按钮状态
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 更新当前分类
+                    currentCategory = this.dataset.category || 'all';
+                    loadMaterials();
+                });
+            });
+        }
+
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 查看材料详情
+        async function viewMaterial(materialId) {
+            try {
+                const response = await materialsAPI.getMaterial(materialId);
+                
+                if (response.success) {
+                    showMaterialModal(response.data);
+                } else {
+                    utils.showNotification('获取材料详情失败', 'error');
+                }
+            } catch (error) {
+                console.error('获取材料详情失败:', error);
+                utils.showNotification('获取材料详情失败', 'error');
+            }
+        }
+
+        // 显示材料详情模态框
+        function showMaterialModal(material) {
+            const modal = document.createElement('div');
+            modal.className = 'material-modal';
+            modal.innerHTML = `
+                <div class="modal-overlay" onclick="closeMaterialModal()"></div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2>${material.title}</h2>
+                        <button class="modal-close" onclick="closeMaterialModal()">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="material-info">
+                            <p><strong>作者：</strong>${material.author}</p>
+                            <p><strong>分类：</strong>${getCategoryName(material.category)}</p>
+                            <p><strong>难度：</strong>${'★'.repeat(material.difficulty)}${'☆'.repeat(5 - material.difficulty)}</p>
+                        </div>
+                        <div class="material-content">
+                            <h3>内容：</h3>
+                            <div class="content-text">${material.content.replace(/\n/g, '<br>')}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" onclick="startPractice(${material.id})">开始练习</button>
+                        <button class="btn btn-secondary" onclick="closeMaterialModal()">关闭</button>
+                    </div>
+                </div>
+            `;
+
+            // 添加样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .material-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .modal-overlay {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                }
+                .modal-content {
+                    position: relative;
+                    background: white;
+                    border-radius: 12px;
+                    max-width: 600px;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+                }
+                .modal-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 20px;
+                    border-bottom: 1px solid #e5e7eb;
+                }
+                .modal-close {
+                    background: none;
+                    border: none;
+                    font-size: 24px;
+                    cursor: pointer;
+                    color: #6b7280;
+                }
+                .modal-body {
+                    padding: 20px;
+                }
+                .material-info {
+                    margin-bottom: 20px;
+                }
+                .content-text {
+                    line-height: 1.8;
+                    font-size: 16px;
+                    color: #374151;
+                }
+                .modal-footer {
+                    padding: 20px;
+                    border-top: 1px solid #e5e7eb;
+                    display: flex;
+                    gap: 10px;
+                    justify-content: flex-end;
+                }
+            `;
+            
+            document.head.appendChild(style);
+            document.body.appendChild(modal);
+        }
+
+        // 关闭材料详情模态框
+        function closeMaterialModal() {
+            const modal = document.querySelector('.material-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // 切换收藏状态
+        async function toggleFavorite(materialId, button) {
+            try {
+                const response = await materialsAPI.toggleFavorite(materialId, sessionId);
+                
+                if (response.success) {
+                    const isFavorited = response.data.is_favorited;
+                    button.textContent = isFavorited ? '❤️' : '🤍';
+                    utils.showNotification(
+                        isFavorited ? '已添加到收藏' : '已取消收藏', 
+                        'success'
+                    );
+                } else {
+                    utils.showNotification('操作失败', 'error');
+                }
+            } catch (error) {
+                console.error('切换收藏失败:', error);
+                utils.showNotification('操作失败', 'error');
+            }
+        }
+
+        // 开始练习
+        function startPractice(materialId) {
+            closeMaterialModal();
+            utils.showNotification('即将跳转到练习页面', 'info');
+            // 这里可以跳转到练习页面或朗读分析页面
+            setTimeout(() => {
+                window.location.href = 'analysis.html';
+            }, 1000);
+        }
+    </script> -->
+    <script>
+        // 材料数据
+        const materialsData = [
+            {
+                id: 1,
+                title: "静夜思",
+                author: "李白",
+                category: "poetry",
+                difficulty: 2,
+                excerpt: "床前明月光，疑是地上霜。举头望明月，低头思故乡。",
+                content: `床前明月光，疑是地上霜。
+举头望明月，低头思故乡。
+
+这是李白的代表作之一，表达了诗人对故乡的思念之情。诗歌语言简洁明了，意境深远，是朗读练习的经典材料。
+
+朗读要点：
+1. 语调要平缓，体现思念的情感
+2. 注意停顿，"床前明月光"后稍作停顿
+3. "举头"和"低头"要有动作感
+4. 最后一句要读出深深的思念`,
+                isFavorite: false
+            },
+            {
+                id: 2,
+                title: "春晓",
+                author: "孟浩然",
+                category: "poetry",
+                difficulty: 1,
+                excerpt: "春眠不觉晓，处处闻啼鸟。夜来风雨声，花落知多少。",
+                content: `春眠不觉晓，处处闻啼鸟。
+夜来风雨声，花落知多少。
+
+这首诗描写了春天早晨的美好景象，表达了诗人对春天的喜爱和对自然的感悟。
+
+朗读要点：
+1. 语调要轻快活泼，体现春天的生机
+2. "处处闻啼鸟"要读出鸟儿的欢快
+3. "夜来风雨声"语调稍沉
+4. 最后一句带有疑问和感叹的语气`,
+                isFavorite: true
+            },
+            {
+                id: 3,
+                title: "再别康桥",
+                author: "徐志摩",
+                category: "modern",
+                difficulty: 4,
+                excerpt: "轻轻的我走了，正如我轻轻的来；我轻轻的招手，作别西天的云彩。",
+                content: `轻轻的我走了，
+正如我轻轻的来；
+我轻轻的招手，
+作别西天的云彩。
+
+那河畔的金柳，
+是夕阳中的新娘；
+波光里的艳影，
+在我的心头荡漾。
+
+这是徐志摩的代表作，表达了诗人对康桥的深深眷恋和离别的不舍。
+
+朗读要点：
+1. 语调要轻柔，体现"轻轻"的感觉
+2. 节奏要舒缓，不要急躁
+3. 注意韵律感，每行的重音要把握好
+4. 情感要真挚，表达出离别的不舍`,
+                isFavorite: false
+            },
+            {
+                id: 4,
+                title: "荷塘月色",
+                author: "朱自清",
+                category: "prose",
+                difficulty: 5,
+                excerpt: "这几天心里颇不宁静。今晚在院子里坐着乘凉，忽然想起日日走过的荷塘...",
+                content: `这几天心里颇不宁静。今晚在院子里坐着乘凉，忽然想起日日走过的荷塘，在这满月的光里，总该另有一番样子吧。月亮渐渐地升高了，墙外马路上孩子们的欢笑，已经听不见了；妻在屋里拍着闰儿，迷迷糊糊地哼着眠歌。我悄悄地披了大衫，带上门出去。
+
+沿着荷塘，是一条曲折的小煤屑路。这是一条幽僻的路；白天也少人走，夜晚更加寂寞。荷塘四面，长着许多树，蓊蓊郁郁的。路的一旁，是些杨柳，和一些不知道名字的树。没有月光的晚上，这路上阴森森的，有些怕人。今晚却很好，虽然月光也还是淡淡的。
+
+朗读要点：
+1. 语调要平和，体现散文的抒情性
+2. 注意语速的变化，描写景物时可稍慢
+3. 情感要细腻，表达出作者的心境
+4. 注意停顿，让听众有想象的空间`,
+                isFavorite: false
+            },
+            {
+                id: 5,
+                title: "将进酒",
+                author: "李白",
+                category: "poetry",
+                difficulty: 5,
+                excerpt: "君不见，黄河之水天上来，奔流到海不复回。君不见，高堂明镜悲白发...",
+                content: `君不见，黄河之水天上来，奔流到海不复回。
+君不见，高堂明镜悲白发，朝如青丝暮成雪。
+人生得意须尽欢，莫使金樽空对月。
+天生我材必有用，千金散尽还复来。
+
+这是李白的代表作之一，表达了诗人豪放不羁的性格和对人生的感悟。
+
+朗读要点：
+1. 语调要豪放激昂，体现李白的性格
+2. "君不见"要读出呼唤的语气
+3. "天生我材必有用"要读出自信和豪迈
+4. 整体节奏要有起伏，富有感染力`,
+                isFavorite: true
+            },
+            {
+                id: 6,
+                title: "雨巷",
+                author: "戴望舒",
+                category: "modern",
+                difficulty: 4,
+                excerpt: "撑着油纸伞，独自彷徨在悠长、悠长又寂寥的雨巷...",
+                content: `撑着油纸伞，独自
+彷徨在悠长、悠长
+又寂寥的雨巷，
+我希望逢着
+一个丁香一样地
+结着愁怨的姑娘。
+
+她是有
+丁香一样的颜色，
+丁香一样的芬芳，
+丁香一样的忧愁，
+在雨中哀怨，
+哀怨又彷徨。
+
+这首诗营造了一种朦胧、忧郁的意境，表达了诗人内心的孤独和对美好的向往。
+
+朗读要点：
+1. 语调要轻柔忧郁，体现诗歌的意境
+2. 节奏要缓慢，营造朦胧的感觉
+3. "悠长、悠长"要拉长音调
+4. 情感要细腻，表达出内心的孤独`,
+                isFavorite: false
+            }
+        ];
+
+        // 当前状态
+        let currentPage = 1;
+        let currentCategory = 'all';
+        let currentSearch = '';
+        const itemsPerPage = 6;
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            initMaterials();
+            initEventListeners();
+        });
+
+        // 初始化材料展示
+        function initMaterials() {
+            renderMaterials();
+            renderPagination();
+        }
+
+        // 初始化事件监听
+        function initEventListeners() {
+            // 搜索输入
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', utils.debounce(handleSearch, 300));
+
+            // 分类筛选
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', handleCategoryFilter);
+            });
+        }
+
+        // 处理搜索
+        function handleSearch(e) {
+            currentSearch = e.target.value.toLowerCase();
+            currentPage = 1;
+            renderMaterials();
+            renderPagination();
+        }
+
+        // 处理分类筛选
+        function handleCategoryFilter(e) {
+            const category = e.target.dataset.category;
+            currentCategory = category;
+            currentPage = 1;
+
+            // 更新按钮状态
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            e.target.classList.add('active');
+
+            renderMaterials();
+            renderPagination();
+        }
+
+        // 筛选材料
+        function filterMaterials() {
+            return materialsData.filter(material => {
+                const matchesCategory = currentCategory === 'all' || material.category === currentCategory;
+                const matchesSearch = currentSearch === '' || 
+                    material.title.toLowerCase().includes(currentSearch) ||
+                    material.author.toLowerCase().includes(currentSearch) ||
+                    material.excerpt.toLowerCase().includes(currentSearch);
+                
+                return matchesCategory && matchesSearch;
+            });
+        }
+
+        // 渲染材料
+        function renderMaterials() {
+            const grid = document.getElementById('materialsGrid');
+            const loadingState = document.getElementById('loadingState');
+            const emptyState = document.getElementById('emptyState');
+
+            // 显示加载状态
+            loadingState.style.display = 'block';
+            grid.style.display = 'none';
+            emptyState.style.display = 'none';
+
+            setTimeout(() => {
+                const filteredMaterials = filterMaterials();
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const currentMaterials = filteredMaterials.slice(startIndex, endIndex);
+
+                loadingState.style.display = 'none';
+
+                if (currentMaterials.length === 0) {
+                    emptyState.style.display = 'block';
+                    grid.style.display = 'none';
+                } else {
+                    emptyState.style.display = 'none';
+                    grid.style.display = 'grid';
+                    
+                    grid.innerHTML = currentMaterials.map(material => `
+                        <div class="material-card" onclick="openMaterialModal(${material.id})">
+                            <div class="material-image">
+                                ${getCategoryIcon(material.category)}
+                            </div>
+                            <div class="material-body">
+                                <span class="material-category">${getCategoryName(material.category)}</span>
+                                <h3 class="material-title">${material.title}</h3>
+                                <p class="material-author">作者：${material.author}</p>
+                                <p class="material-excerpt">${material.excerpt}</p>
+                                <div class="material-footer">
+                                    <div class="material-difficulty">
+                                        <span>难度：</span>
+                                        <div class="difficulty-stars">
+                                            ${generateStars(material.difficulty)}
+                                        </div>
+                                    </div>
+                                    <div class="material-actions">
+                                        <button class="action-btn btn-view" onclick="event.stopPropagation(); openMaterialModal(${material.id})">查看</button>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }, 500);
+        }
+
+        // 渲染分页
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            const filteredMaterials = filterMaterials();
+            const totalPages = Math.ceil(filteredMaterials.length / itemsPerPage);
+
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+
+            pagination.style.display = 'flex';
+            
+            let paginationHTML = '';
+            
+            // 上一页按钮
+            paginationHTML += `
+                <button class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="changePage(${currentPage - 1})">
+                    上一页
+                </button>
+            `;
+            
+            // 页码按钮
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    paginationHTML += `
+                        <button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    paginationHTML += '<span class="page-btn" style="border: none; background: none;">...</span>';
+                }
+            }
+            
+            // 下一页按钮
+            paginationHTML += `
+                <button class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="changePage(${currentPage + 1})">
+                    下一页
+                </button>
+            `;
+            
+            pagination.innerHTML = paginationHTML;
+        }
+
+        // 切换页面
+        function changePage(page) {
+            currentPage = page;
+            renderMaterials();
+            renderPagination();
+            
+            // 滚动到顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 获取分类图标
+        function getCategoryIcon(category) {
+            const icons = {
+                poetry: '📜',
+                modern: '🎭',
+                prose: '📖',
+                classic: '📚'
+            };
+            return icons[category] || '📄';
+        }
+
+        // 获取分类名称
+        function getCategoryName(category) {
+            const names = {
+                poetry: '古诗词',
+                modern: '现代诗',
+                prose: '散文',
+                classic: '经典文学'
+            };
+            return names[category] || '其他';
+        }
+
+        // 生成星级
+        function generateStars(difficulty) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                stars += `<span class="star ${i <= difficulty ? 'filled' : ''}"></span>`;
+            }
+            return stars;
+        }
+
+        // 切换收藏状态
+        function toggleFavorite(id) {
+            const material = materialsData.find(m => m.id === id);
+            if (material) {
+                material.isFavorite = !material.isFavorite;
+                renderMaterials();
+                
+                const message = material.isFavorite ? '已添加到收藏' : '已取消收藏';
+                app.notifications.show(message, 'success', 2000);
+            }
+        }
+
+        // 打开材料详情模态框
+        function openMaterialModal(id) {
+            const material = materialsData.find(m => m.id === id);
+            if (!material) return;
+
+            const modal = document.getElementById('materialModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+
+            modalTitle.textContent = material.title;
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <span class="material-category">${getCategoryName(material.category)}</span>
+                    <h4 style="margin: 0.5rem 0; color: var(--gray-700);">作者：${material.author}</h4>
+                    <div class="material-difficulty" style="margin-bottom: 1rem;">
+                        <span>难度：</span>
+                        <div class="difficulty-stars">
+                            ${generateStars(material.difficulty)}
+                        </div>
+                    </div>
+                </div>
+                <div style="white-space: pre-line; line-height: 1.8; color: var(--gray-700);">
+                    ${material.content}
+                </div>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                   
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭材料详情模态框
+        function closeMaterialModal() {
+            const modal = document.getElementById('materialModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // 更新模态框中的收藏状态
+        function updateModalFavorite(id) {
+            const material = materialsData.find(m => m.id === id);
+            const favoriteBtn = document.querySelector('.modal .btn-favorite');
+            if (favoriteBtn && material) {
+                favoriteBtn.className = `action-btn btn-favorite ${material.isFavorite ? 'active' : ''}`;
+                favoriteBtn.innerHTML = material.isFavorite ? '❤️ 已收藏' : '🤍 收藏';
+            }
+        }
+
+        // 开始练习
+        function startPractice(id) {
+            app.notifications.show('即将跳转到练习页面...', 'info', 2000);
+            setTimeout(() => {
+                window.location.href = `practice.html?id=${id}`;
+            }, 1000);
+        }
+
+        // ESC键关闭模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMaterialModal();
+            }
+        });
+
+        // 点击背景关闭模态框
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                closeMaterialModal();
+            }
+        });
+        
+    </script>
+
+</body>
+</html>
+
