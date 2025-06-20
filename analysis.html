@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>朗读分析评分 - 朗读学习指导平台</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .analysis-header {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: var(--spacing-3xl) 0 var(--spacing-2xl);
+            margin-top: 70px;
+        }
+        
+        .analysis-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .analysis-subtitle {
+            font-size: 1.125rem;
+            opacity: 0.9;
+        }
+        
+        .analysis-content {
+            padding: var(--spacing-2xl) 0;
+        }
+        
+        .analysis-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-3xl);
+        }
+        
+        .step-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            text-align: center;
+            transition: var(--transition-normal);
+        }
+        
+        .step-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto var(--spacing-lg);
+        }
+        
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .step-description {
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+        
+        .upload-section {
+            background: var(--gray-50);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .upload-area {
+            border: 3px dashed var(--gray-300);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-3xl);
+            text-align: center;
+            transition: var(--transition-fast);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--primary-blue);
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .upload-area.uploading {
+            border-color: var(--primary-blue);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--spacing-lg);
+            color: var(--gray-400);
+        }
+        
+        .upload-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .upload-hint {
+            color: var(--gray-500);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .upload-button {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        
+        .upload-button:hover {
+            background: var(--primary-blue-dark);
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .upload-progress {
+            margin-top: var(--spacing-lg);
+            display: none;
+        }
+        
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .progress-text {
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+        
+        .progress-percentage {
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+        
+        .progress-bar-container {
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        
+        .file-info {
+            display: none;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+        
+        .file-details {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-blue);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+        
+        .file-meta {
+            flex: 1;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .file-size {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+        
+        .file-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        
+        .action-button {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: var(--transition-fast);
+        }
+        
+        .btn-analyze {
+            background: var(--success-green);
+            color: var(--white);
+        }
+        
+        .btn-analyze:hover {
+            background: #059669;
+        }
+        
+        .btn-remove {
+            background: var(--error-red);
+            color: var(--white);
+        }
+        
+        .btn-remove:hover {
+            background: #dc2626;
+        }
+        
+        .analysis-result {
+            display: none;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-2xl);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        .result-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .overall-score {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .score-label {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .score-description {
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+        
+        .detailed-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .score-item {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+        
+        .score-category {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .score-bar {
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .score-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-sm);
+            transition: width 1s ease-in-out;
+        }
+        
+        .score-comment {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        .suggestions {
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+        }
+        
+        .suggestions-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+        
+        .suggestion-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .suggestion-item {
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestion-icon {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-blue);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .suggestion-content {
+            flex: 1;
+        }
+        
+        .suggestion-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .suggestion-description {
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+        
+        .result-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            margin-top: var(--spacing-2xl);
+            flex-wrap: wrap;
+        }
+        
+        .analyzing-state {
+            display: none;
+            text-align: center;
+            padding: var(--spacing-3xl);
+        }
+        
+        .analyzing-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--spacing-lg);
+        }
+        
+        .analyzing-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .analyzing-hint {
+            color: var(--gray-500);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .analysis-steps {
+                grid-template-columns: 1fr;
+            }
+            
+            .detailed-scores {
+                grid-template-columns: 1fr;
+            }
+            
+            .result-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="logo">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                        <path d="M16 2L26 8V24L16 30L6 24V8L16 2Z" fill="url(#logoGradient)"/>
+                        <defs>
+                            <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#6366F1"/>
+                                <stop offset="100%" style="stop-color:#8B5CF6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="brand-text">朗读学习平台</span>
+                </div>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="../index.html" class="nav-link">首页</a>
+                <a href="materials.html" class="nav-link">资料库</a>
+                <a href="chat.html" class="nav-link">智能助手</a>
+                <a href="analysis.html" class="nav-link active">朗读分析</a>
+            </div>
+            <div class="nav-toggle" id="navToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面头部 -->
+    <header class="analysis-header">
+        <div class="container">
+            <h1 class="analysis-title">朗读分析评分</h1>
+            <p class="analysis-subtitle">上传朗读视频，获得AI智能分析评分和个性化改进建议</p>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <main class="analysis-content">
+        <div class="container">
+            <!-- 使用步骤 -->
+            <div class="analysis-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">上传视频</h3>
+                    <p class="step-description">选择你的朗读视频文件，支持MP4、MOV、AVI等格式，建议文件大小不超过100MB</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">AI分析</h3>
+                    <p class="step-description">我们的AI系统将提取音频并分析语音特征，包括清晰度、语调、节奏等多个维度</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">获得报告</h3>
+                    <p class="step-description">获得详细的分析报告和评分，以及针对性的改进建议，帮助你提升朗读水平</p>
+                </div>
+            </div>
+
+            <!-- 上传区域 -->
+            <div class="upload-section">
+                <div class="upload-area" id="uploadArea" onclick="triggerFileInput()">
+                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none">
+                        <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <div class="upload-text">点击上传或拖拽视频文件到此处</div>
+                    <div class="upload-hint">支持 MP4, MOV, AVI 格式，最大 100MB</div>
+                    <button class="upload-button" type="button">选择文件</button>
+                    <input type="file" id="fileInput" class="file-input" accept="video/*" onchange="handleFileSelect(event)">
+                </div>
+
+                <!-- 上传进度 -->
+                <div class="upload-progress" id="uploadProgress">
+                    <div class="progress-info">
+                        <span class="progress-text">正在上传...</span>
+                        <span class="progress-percentage" id="progressPercentage">0%</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                </div>
+
+                <!-- 文件信息 -->
+                <div class="file-info" id="fileInfo">
+                    <div class="file-details">
+                        <div class="file-icon">🎬</div>
+                        <div class="file-meta">
+                            <div class="file-name" id="fileName"></div>
+                            <div class="file-size" id="fileSize"></div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="action-button btn-analyze" onclick="startAnalysis()">开始分析</button>
+                            <button class="action-button btn-remove" onclick="removeFile()">移除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分析中状态 -->
+            <div class="analyzing-state" id="analyzingState">
+                <div class="analyzing-spinner"></div>
+                <div class="analyzing-text">正在分析你的朗读...</div>
+                <div class="analyzing-hint">这可能需要几分钟时间，请耐心等待</div>
+            </div>
+
+            <!-- 分析结果 -->
+            <div class="analysis-result" id="analysisResult">
+                <div class="result-header">
+                    <div class="overall-score" id="overallScore">85</div>
+                    <div class="score-label">综合评分</div>
+                    <div class="score-description" id="scoreDescription">
+                        你的朗读表现良好，语音清晰度和节奏掌控都不错，但在语调变化方面还有提升空间。
+                    </div>
+                </div>
+
+                <div class="detailed-scores" id="detailedScores">
+                    <!-- 详细评分将通过JavaScript动态生成 -->
+                </div>
+
+                <div class="suggestions">
+                    <h3 class="suggestions-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 1L13 7L19 7L14.5 11L16 17L10 14L4 17L5.5 11L1 7L7 7L10 1Z" fill="currentColor"/>
+                        </svg>
+                        改进建议
+                    </h3>
+                    <ul class="suggestion-list" id="suggestionList">
+                        <!-- 建议将通过JavaScript动态生成 -->
+                    </ul>
+                </div>
+
+                <div class="result-actions">
+                    <button class="btn btn-primary" onclick="downloadReport()">下载报告</button>
+                    <button class="btn btn-secondary" onclick="analyzeAnother()">分析其他视频</button>
+                    <button class="btn btn-secondary" onclick="shareResult()">分享结果</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/main.js"></script>
+    <script>
+        let currentFile = null;
+        let analysisData = null;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initUploadArea();
+        });
+
+        // 初始化上传区域
+        function initUploadArea() {
+            const uploadArea = document.getElementById('uploadArea');
+            
+            // 拖拽事件
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleFile(files[0]);
+                }
+            });
+        }
+
+        // 触发文件选择
+        function triggerFileInput() {
+            document.getElementById('fileInput').click();
+        }
+
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        // 处理文件
+        function handleFile(file) {
+            // 验证文件类型
+            if (!file.type.startsWith('video/')) {
+                app.notifications.show('请选择视频文件', 'error');
+                return;
+            }
+
+            // 验证文件大小 (100MB)
+            if (file.size > 100 * 1024 * 1024) {
+                app.notifications.show('文件大小不能超过100MB', 'error');
+                return;
+            }
+
+            currentFile = file;
+            showFileInfo(file);
+            simulateUpload();
+        }
+
+        // 显示文件信息
+        function showFileInfo(file) {
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            
+            fileInfo.style.display = 'block';
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 模拟上传过程
+        function simulateUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const uploadProgress = document.getElementById('uploadProgress');
+            const progressBarFill = document.getElementById('progressBarFill');
+            const progressPercentage = document.getElementById('progressPercentage');
+
+            uploadArea.classList.add('uploading');
+            uploadProgress.style.display = 'block';
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+
+                progressBarFill.style.width = progress + '%';
+                progressPercentage.textContent = Math.round(progress) + '%';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        uploadProgress.style.display = 'none';
+                        uploadArea.classList.remove('uploading');
+                        app.notifications.show('文件上传成功', 'success');
+                    }, 500);
+                }
+            }, 200);
+        }
+
+        // 移除文件
+        function removeFile() {
+            currentFile = null;
+            document.getElementById('fileInfo').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('analysisResult').style.display = 'none';
+            document.getElementById('analyzingState').style.display = 'none';
+        }
+
+        // 开始分析
+        function startAnalysis() {
+            if (!currentFile) {
+                app.notifications.show('请先选择文件', 'warning');
+                return;
+            }
+
+            const analyzingState = document.getElementById('analyzingState');
+            const analysisResult = document.getElementById('analysisResult');
+
+            // 隐藏结果，显示分析状态
+            analysisResult.style.display = 'none';
+            analyzingState.style.display = 'block';
+
+            // 滚动到分析状态
+            analyzingState.scrollIntoView({ behavior: 'smooth' });
+
+            // 模拟分析过程
+            setTimeout(() => {
+                analyzingState.style.display = 'none';
+                showAnalysisResult();
+            }, 5000);
+        }
+
+        // 显示分析结果
+        function showAnalysisResult() {
+            // 生成模拟分析数据
+            analysisData = generateMockAnalysisData();
+            
+            const analysisResult = document.getElementById('analysisResult');
+            const overallScore = document.getElementById('overallScore');
+            const scoreDescription = document.getElementById('scoreDescription');
+            const detailedScores = document.getElementById('detailedScores');
+            const suggestionList = document.getElementById('suggestionList');
+
+            // 设置综合评分
+            overallScore.textContent = analysisData.overallScore;
+            scoreDescription.textContent = analysisData.description;
+
+            // 生成详细评分
+            detailedScores.innerHTML = analysisData.detailedScores.map(score => `
+                <div class="score-item">
+                    <div class="score-category">${score.category}</div>
+                    <div class="score-value">${score.value}</div>
+                    <div class="score-bar">
+                        <div class="score-fill" style="width: ${score.value}%"></div>
+                    </div>
+                    <div class="score-comment">${score.comment}</div>
+                </div>
+            `).join('');
+
+            // 生成建议列表
+            suggestionList.innerHTML = analysisData.suggestions.map((suggestion, index) => `
+                <li class="suggestion-item">
+                    <div class="suggestion-icon">${index + 1}</div>
+                    <div class="suggestion-content">
+                        <div class="suggestion-title">${suggestion.title}</div>
+                        <div class="suggestion-description">${suggestion.description}</div>
+                    </div>
+                </li>
+            `).join('');
+
+            // 显示结果
+            analysisResult.style.display = 'block';
+            analysisResult.scrollIntoView({ behavior: 'smooth' });
+
+            // 动画效果
+            setTimeout(() => {
+                const scoreFills = document.querySelectorAll('.score-fill');
+                scoreFills.forEach(fill => {
+                    const width = fill.style.width;
+                    fill.style.width = '0%';
+                    setTimeout(() => {
+                        fill.style.width = width;
+                    }, 500);
+                });
+            }, 500);
+
+            app.notifications.show('分析完成！', 'success');
+        }
+
+        // 生成模拟分析数据
+        function generateMockAnalysisData() {
+            const scores = {
+                clarity: Math.floor(Math.random() * 20) + 75,
+                tone: Math.floor(Math.random() * 20) + 70,
+                rhythm: Math.floor(Math.random() * 20) + 80,
+                emotion: Math.floor(Math.random() * 20) + 75,
+                pronunciation: Math.floor(Math.random() * 20) + 85
+            };
+
+            const overall = Math.round((scores.clarity + scores.tone + scores.rhythm + scores.emotion + scores.pronunciation) / 5);
+
+            const detailedScores = [
+                {
+                    category: '语音清晰度',
+                    value: scores.clarity,
+                    comment: scores.clarity >= 85 ? '发音清晰，吐字准确' : scores.clarity >= 75 ? '发音较清晰，个别字词需要注意' : '发音需要加强练习'
+                },
+                {
+                    category: '语调变化',
+                    value: scores.tone,
+                    comment: scores.tone >= 85 ? '语调丰富，富有表现力' : scores.tone >= 75 ? '语调有一定变化，可以更丰富' : '语调较平，需要增加变化'
+                },
+                {
+                    category: '节奏掌控',
+                    value: scores.rhythm,
+                    comment: scores.rhythm >= 85 ? '节奏把握准确，停顿恰当' : scores.rhythm >= 75 ? '节奏基本准确，停顿可以更自然' : '节奏需要改进，注意停顿'
+                },
+                {
+                    category: '情感表达',
+                    value: scores.emotion,
+                    comment: scores.emotion >= 85 ? '情感丰富，感染力强' : scores.emotion >= 75 ? '有一定情感表达，可以更投入' : '情感表达需要加强'
+                },
+                {
+                    category: '发音准确性',
+                    value: scores.pronunciation,
+                    comment: scores.pronunciation >= 85 ? '发音标准，无明显错误' : scores.pronunciation >= 75 ? '发音基本准确，个别音需要注意' : '发音需要系统练习'
+                }
+            ];
+
+            const suggestions = [
+                {
+                    title: '加强语调练习',
+                    description: '建议多听优秀朗读示范，模仿语调的起伏变化，让朗读更有表现力。'
+                },
+                {
+                    title: '注意停顿节奏',
+                    description: '根据标点符号和语义停顿，让听众有理解和想象的时间。'
+                },
+                {
+                    title: '增强情感投入',
+                    description: '深入理解文本内容，用心感受作者的情感，让朗读更有感染力。'
+                },
+                {
+                    title: '练习发音技巧',
+                    description: '针对发音不准确的字词进行专项练习，可以使用发音软件辅助。'
+                }
+            ];
+
+            let description = '';
+            if (overall >= 90) {
+                description = '优秀！你的朗读水平很高，各方面表现都很出色。';
+            } else if (overall >= 80) {
+                description = '良好！你的朗读基础扎实，继续保持并在细节上精进。';
+            } else if (overall >= 70) {
+                description = '不错！你有一定的朗读基础，通过练习可以进一步提升。';
+            } else {
+                description = '需要努力！建议多练习基础技巧，循序渐进地提高。';
+            }
+
+            return {
+                overallScore: overall,
+                description,
+                detailedScores,
+                suggestions: suggestions.slice(0, 3) // 只显示前3个建议
+            };
+        }
+
+        // 下载报告
+        function downloadReport() {
+            if (!analysisData) {
+                app.notifications.show('暂无分析数据', 'warning');
+                return;
+            }
+
+            const reportData = {
+                fileName: currentFile.name,
+                analysisDate: new Date().toISOString(),
+                overallScore: analysisData.overallScore,
+                description: analysisData.description,
+                detailedScores: analysisData.detailedScores,
+                suggestions: analysisData.suggestions
+            };
+
+            const blob = new Blob([JSON.stringify(reportData, null, 2)], {
+                type: 'application/json'
+            });
+
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `朗读分析报告-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            app.notifications.show('报告已下载', 'success');
+        }
+
+        // 分析其他视频
+        function analyzeAnother() {
+            removeFile();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 分享结果
+        function shareResult() {
+            if (!analysisData) {
+                app.notifications.show('暂无分析数据', 'warning');
+                return;
+            }
+
+            const shareText = `我在朗读学习平台获得了${analysisData.overallScore}分的朗读评分！快来试试吧！`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '朗读分析结果',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                // 复制到剪贴板
+                navigator.clipboard.writeText(shareText).then(() => {
+                    app.notifications.show('分享内容已复制到剪贴板', 'success');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+
