@@ -378,9 +378,11 @@ body {
 }
 
 .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    display: flex;
+    justify-content: flex-start; /* 将项目对齐到行的起始位置（左侧） */
+    align-items: flex-start;
     gap: var(--spacing-2xl);
+    flex-wrap: nowrap;
 }
 
 .feature-card {
@@ -394,17 +396,7 @@ body {
     overflow: hidden;
 }
 
-.feature-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--gradient-primary);
-    transform: scaleX(0);
-    transition: var(--transition-normal);
-}
+
 
 .feature-card:hover {
     transform: translateY(-8px);
@@ -416,9 +408,9 @@ body {
 }
 
 .feature-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto var(--spacing-lg);
+    width: 60px;
+    height: 60px;
+    margin: 10px var(--spacing-lg);
     background: var(--gradient-card);
     border-radius: var(--radius-xl);
     display: flex;
@@ -538,7 +530,7 @@ body {
 
 /* 页脚 */
 .footer {
-    background: var(--gray-300);
+    background: var(--gray-900);
     color: var(--white);
     padding: var(--spacing-3xl) 0 var(--spacing-xl);
 }
