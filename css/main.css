@@ -353,6 +353,7 @@ body {
 }
 
 /* 功能特色区域 */
+/* 功能特色区域 */
 .features-section {
     padding: var(--spacing-3xl) 0;
     background: var(--white);
@@ -378,25 +379,28 @@ body {
 }
 
 .features-grid {
-    display: flex;
-    justify-content: flex-start; /* 将项目对齐到行的起始位置（左侧） */
-    align-items: flex-start;
-    gap: var(--spacing-2xl);
-    flex-wrap: nowrap;
+    display: grid; /* 从 flex 切换回 grid，以便更好地控制列布局 */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* 允许自动调整列数，但每个最小 300px */
+    gap: var(--spacing-2xl); /* 保持卡片间距 */
+    justify-items: center; /* 让 grid item 在各自的网格单元格中居中 */
+    /* 如果你想让整个 features-grid 在容器中居中，可以使用 margin: 0 auto; 和 max-width */
+    max-width: 1200px; /* 示例最大宽度，确保它不会太宽 */
+    margin: 0 auto; /* 让整个网格在 container 内部居中 */
 }
 
 .feature-card {
     background: var(--white);
     border: 1px solid var(--gray-200);
     border-radius: var(--radius-xl);
-    padding: var(--spacing-2xl);
-    text-align: center;
+    padding: var(--spacing-2xl); /* 保持内边距 */
+    text-align: center; /* 保持文本和内容的水平居中 */
     transition: var(--transition-normal);
     position: relative;
     overflow: hidden;
+    /* 确保卡片在 flex 布局下有最小宽度，在 grid 布局下可以不加 flex-shrink */
+    /* flex-shrink: 0; */
+    /* flex-basis: 300px; */ /* 如果是 flex，可以设置基础宽度 */
 }
-
-
 
 .feature-card:hover {
     transform: translateY(-8px);
@@ -408,16 +412,23 @@ body {
 }
 
 .feature-icon {
-    width: 60px;
-    height: 60px;
-    margin: 10px var(--spacing-lg);
+    width: 80px; /* 增加图标背景方框的宽度 */
+    height: 80px; /* 增加图标背景方框的高度 */
+    margin: 0 auto var(--spacing-lg); /* **关键修改：将 margin 改为自动水平居中** */
     background: var(--gradient-card);
     border-radius: var(--radius-xl);
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--primary-blue);
+    /* 确保 SVG 图标在其中居中 */
 }
+
+.feature-icon svg {
+    width: 60%; /* 让 SVG 填充图标容器的大部分空间 */
+    height: 60%;
+}
+
 
 .feature-title {
     font-size: 1.5rem;
@@ -442,10 +453,29 @@ body {
     align-items: center;
     gap: var(--spacing-xs);
     transition: var(--transition-fast);
+    text-decoration: none; /* 确保链接没有下划线 */
+}
+
+/* 针对 .feature-btn 内部的 a 标签，确保其样式正确 */
+.feature-btn a.nav-link {
+    background: none;
+    padding: 0; /* 移除 a 标签默认的 padding */
+    border-radius: 0; /* 移除 a 标签默认的 border-radius */
+    color: var(--primary-blue); /* 确保颜色正确 */
+    font-weight: 600;
+    text-decoration: none; /* 再次确保没有下划线 */
+    position: static; /* 移除可能的影响 */
+}
+.feature-btn a.nav-link::after {
+    content: none; /* 移除 nav-link 激活时的下划线，因为它在这里是作为按钮的一部分 */
 }
 
 .feature-btn:hover {
     gap: var(--spacing-sm);
+}
+
+.feature-btn:hover a.nav-link {
+    color: var(--primary-blue); /* 确保 hover 颜色一致 */
 }
 
 /* 使用流程区域 */
